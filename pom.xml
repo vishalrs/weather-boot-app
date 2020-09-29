@@ -8,7 +8,9 @@
     <artifactId>weather-app</artifactId>
     <version>1.0.0</version>
     <modules>
-        
+        <module>weather-common</module>
+        <module>weather-standard-api</module>
+        <module>weather-premium-api</module>
     </modules>
     <packaging>pom</packaging>
     <properties>
