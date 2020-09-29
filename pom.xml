@@ -11,6 +11,7 @@
         <module>weather-common</module>
         <module>weather-standard-api</module>
         <module>weather-premium-api</module>
+        <module>weather-webapp</module>
     </modules>
     <packaging>pom</packaging>
     <properties>
