@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Weather App</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet">
+  <link href="/css/site.css" rel="stylesheet">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <style>
+    .ui-autocomplete {
+      max-height: 100px;
+      overflow-y: auto;
+      /* prevent horizontal scrollbar */
+      overflow-x: hidden;
+    }
+    /* IE 6 doesn't support max-height
+     * we use height instead, but this forces the menu to always be this tall
+     */
+    * html .ui-autocomplete {
+      height: 100px;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="/js/app-utils.js"></script>
+  <script type="text/javascript">
+   $( function() {
+        var cities = ["Den Haag", "Amsterdam", "Mumbai", "New York", "Sydney", "Tokyo", "London"];
+        $('#cities').autocomplete({
+            source: cities,
+            select: function( event, ui ) {replace_search('city', ui.item.value);}
+        });
+    });
+  </script>
+</head>
+<body>
+
+<main class="main-container">
+  <div style="padding:10px">
+      <input id="cities" type="text" name="cities" placeholder="Type City Name" style="width:100%;height:130%;">
+  </div>
+  <div class="location-and-date">
+    <h4 class="user-details" th:text="'Welcome,' + ${authUser.firstname}"></h4>
+    <h4 class="location-and-date__location" th:text="${weather_info.city}"></h4>
+    <div th:text="${weather_info.currentDateTime}"></div>
+  </div>
+
+
+  <div class="current-temperature">
+    <div class="current-temperature__icon-container">
+      <img src="/icons/mostly-sunny.svg" class="current-temperature__icon" alt="">
+    </div>
+    <div class="current-temperature__content-container">
+      <div class="current-temperature__value" th:text="${weather_info.currentTemp} + '&deg;'"></div>
+      <div class="current-temperature__summary" th:text="${weather_info.description}"></div>
+    </div>
+  </div>
+
+  <div class="current-stats">
+    <div>
+      <div class="current-stats__value" th:text="${weather_info.maxTemp}"></div>
+      <div class="current-stats__label">Max</div>
+      <div class="current-stats__value" th:text="${weather_info.minTemp}"></div>
+      <div class="current-stats__label">Min</div>
+    </div>
+    <div>
+      <div class="current-stats__value" th:text="${weather_info.windSpeed}"></div>
+      <div class="current-stats__label">Wind</div>
+      <div class="current-stats__value" th:text="${weather_info.humidity} + '%'"></div>
+      <div class="current-stats__label">Humidity</div>
+    </div>
+    <div>
+      <div class="current-stats__value" th:text="${weather_info.sunrise}"></div>
+      <div class="current-stats__label">Sunrise</div>
+      <div class="current-stats__value" th:text="${weather_info.sunset}"></div>
+      <div class="current-stats__label">Sunset</div>
+    </div>
+  </div>
+  <div class="next-5-days" th:if="${forecast_info!=null}">
+    <h2 class="next-5-days__heading" th:text="'Next ' + ${forecast_info.size()} + ' days'"></h2>
+    <div class="next-5-days__container">
+      <div class="next-5-days__row" th:each="forecast: ${forecast_info}">
+        <div class="next-5-days__date" th:text="${forecast.currentDateTime}">
+          <div class="next-5-days__label"></div>
+        </div>
+        <div class="next-5-days__low">
+          <label th:text="${forecast.minTemp} + '&deg;'"/>
+          <div class="next-5-days__label">Low</div>
+        </div>
+
+        <div class="next-5-days__high" >
+          <label th:text="${forecast.maxTemp} + '&deg;'"/>
+          <div class="next-5-days__label">High</div>
+        </div>
+
+        <div class="next-5-days__icon">
+          <img src="/icons/sunny.svg" alt="Sunny">
+        </div>
+
+        <div class="next-5-days__rain" >
+          <label th:text="${forecast.humidity} + '%'"/>
+          <div class="next-5-days__label">Humidity</div>
+        </div>
+
+        <div class="next-5-days__wind" >
+          <label th:text="${forecast.windSpeed}"/>
+          <div class="next-5-days__label">Wind</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="next-5-days" th:if="${forecast_info==null}">
+    <label>Forecast not available</label>
+  </div>
+<!--
+  <div class="weather-by-hour">
+    <h2 class="weather-by-hour__heading">Today's weather</h2>
+    <div class="weather-by-hour__container">
+      <div class="weather-by-hour__item">
+        <div class="weather-by-hour__hour">3am</div>
+        <img src="/resources/icons/mostly-sunny.svg" alt="Mostly sunny">
+        <div>14&deg;</div>
+      </div>
+      <div class="weather-by-hour__item">
+        <div class="weather-by-hour__hour">6am</div>
+        <img src="/resources/icons/mostly-sunny.svg" alt="Mostly sunny">
+        <div>16&deg;</div>
+      </div>
+      <div class="weather-by-hour__item">
+        <div class="weather-by-hour__hour">9am</div>
+        <img src="/resources/icons/mostly-sunny.svg" alt="Mostly sunny">
+        <div>17&deg;</div>
+      </div>
+      <div class="weather-by-hour__item">
+        <div class="weather-by-hour__hour">12pm</div>
+        <img src="/resources/icons/mostly-sunny.svg" alt="Mostly sunny">
+        <div>19&deg;</div>
+      </div>
+      <div class="weather-by-hour__item">
+        <div class="weather-by-hour__hour">3pm</div>
+        <img src="/resources/icons/sunny.svg" alt="Sunny">
+        <div>21&deg;</div>
+      </div>
+      <div class="weather-by-hour__item">
+        <div class="weather-by-hour__hour">6pm</div>
+        <img src="/resources/icons/sunny.svg" alt="Sunny">
+        <div>20&deg;</div>
+      </div>
+      <div class="weather-by-hour__item">
+        <div class="weather-by-hour__hour">9pm</div>
+        <img src="/resources/icons/mostly-sunny.svg" alt="Mostly sunny">
+        <div>18&deg;</div>
+      </div>
+    </div>
+  </div>
+-->
+  <!--
+  <div class="next-5-days">
+    <h2 class="next-5-days__heading">Next 5 days</h2>
+    <div class="next-5-days__container">
+
+      <div class="next-5-days__row">
+
+        <div class="next-5-days__date">
+          Tue
+          <div class="next-5-days__label">30/7</div>
+        </div>
+
+        <div class="next-5-days__low">
+          10&deg;
+          <div class="next-5-days__label">Low</div>
+        </div>
+
+        <div class="next-5-days__high">
+          21&deg;
+          <div class="next-5-days__label">High</div>
+        </div>
+
+        <div class="next-5-days__icon">
+          <img src="/resources/icons/sunny.svg" alt="Sunny">
+        </div>
+
+        <div class="next-5-days__rain">
+          0%
+          <div class="next-5-days__label">Rain</div>
+        </div>
+
+        <div class="next-5-days__wind">
+          12mph
+          <div class="next-5-days__label">Wind</div>
+        </div>
+
+      </div>
+      <div class="next-5-days__row">
+
+        <div class="next-5-days__date">
+          Wed
+          <div class="next-5-days__label">31/7</div>
+        </div>
+
+        <div class="next-5-days__low">
+          9&deg;
+          <div class="next-5-days__label">Low</div>
+        </div>
+
+        <div class="next-5-days__high">
+          18&deg;
+          <div class="next-5-days__label">High</div>
+        </div>
+
+        <div class="next-5-days__icon">
+          <img src="/resources/icons/mostly-sunny.svg" alt="Mostly sunny">
+        </div>
+
+        <div class="next-5-days__rain">
+          3%
+          <div class="next-5-days__label">Rain</div>
+        </div>
+
+        <div class="next-5-days__wind">
+          7mph
+          <div class="next-5-days__label">Wind</div>
+        </div>
+
+      </div>
+      <div class="next-5-days__row">
+
+        <div class="next-5-days__date">
+          Thur
+          <div class="next-5-days__label">1/8</div>
+        </div>
+
+        <div class="next-5-days__low">
+          7&deg;
+          <div class="next-5-days__label">Low</div>
+        </div>
+
+        <div class="next-5-days__high">
+          15&deg;
+          <div class="next-5-days__label">High</div>
+        </div>
+
+        <div class="next-5-days__icon">
+          <img src="/resources/icons/mostly-sunny.svg" alt="Mostly sunny">
+        </div>
+
+        <div class="next-5-days__rain">
+          75%
+          <div class="next-5-days__label">Rain</div>
+        </div>
+
+        <div class="next-5-days__wind">
+          11mph
+          <div class="next-5-days__label">Wind</div>
+        </div>
+
+      </div>
+      <div class="next-5-days__row">
+
+        <div class="next-5-days__date">
+          Tue
+          <div class="next-5-days__label">2/8</div>
+        </div>
+
+        <div class="next-5-days__low">
+          12&deg;
+          <div class="next-5-days__label">Low</div>
+        </div>
+
+        <div class="next-5-days__high">
+          24&deg;
+          <div class="next-5-days__label">High</div>
+        </div>
+
+        <div class="next-5-days__icon">
+          <img src="/resources/icons/sunny.svg" alt="Sunny">
+        </div>
+
+        <div class="next-5-days__rain">
+          2%
+          <div class="next-5-days__label">Rain</div>
+        </div>
+
+        <div class="next-5-days__wind">
+          8mph
+          <div class="next-5-days__label">Wind</div>
+        </div>
+
+      </div>
+      <div class="next-5-days__row">
+
+        <div class="next-5-days__date">
+          Tue
+          <div class="next-5-days__label">30/7</div>
+        </div>
+
+        <div class="next-5-days__low">
+          10&deg;
+          <div class="next-5-days__label">Low</div>
+        </div>
+
+        <div class="next-5-days__high">
+          21&deg;
+          <div class="next-5-days__label">High</div>
+        </div>
+
+        <div class="next-5-days__icon">
+          <img src="/resources/icons/mostly-sunny.svg" alt="Mostly sunny">
+        </div>
+
+        <div class="next-5-days__rain">
+          0%
+          <div class="next-5-days__label">Rain</div>
+        </div>
+
+        <div class="next-5-days__wind">
+          12mph
+          <div class="next-5-days__label">Wind</div>
+        </div>
+
+      </div>-->
+
+    </div>
+  </div>
+</main>
+</body>
+
+</html>
