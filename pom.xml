@@ -11,6 +11,8 @@
         <module>weather-common</module>
         <module>weather-standard-api</module>
         <module>weather-premium-api</module>
+        <module>weather-autoconfigure</module>
+        <module>weather-boot-starter</module>
         <module>weather-webapp</module>
     </modules>
     <packaging>pom</packaging>

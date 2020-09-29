@@ -26,7 +26,12 @@
 		</dependency>
 		<dependency>
 			<groupId>com.sogeti</groupId>
-			<artifactId>weather-standard-api</artifactId>
+			<artifactId>weather-boot-starter</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sogeti</groupId>
+			<artifactId>weather-premium-api</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 
