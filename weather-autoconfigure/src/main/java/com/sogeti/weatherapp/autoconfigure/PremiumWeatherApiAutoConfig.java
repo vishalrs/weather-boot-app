@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriComponentsBuilder;
+import com.sogeti.weatherapp.autoconfigure.handler.RestTemplateResponseErrorHandler;
 
 @Configuration
 @ConditionalOnClass(PremiumWeatherInfoApi.class)

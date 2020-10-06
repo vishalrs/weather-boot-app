@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriComponentsBuilder;
+import com.sogeti.weatherapp.autoconfigure.handler.RestTemplateResponseErrorHandler;
 
 @Configuration
 @ConditionalOnClass(StandardWeatherInfoApi.class)
@@ -33,6 +34,9 @@ public class StandardWeatherApiAutoConfig {
                 .path("/data/2.5/onecall")
                 .query("appid=" + apiKey + "&units=metric&lat={lat}&lon={lng}");
         DefaultUriBuilderFactory fact = new DefaultUriBuilderFactory(uriComponents);
-        return new RestTemplateBuilder().uriTemplateHandler(fact).build();
+        return new RestTemplateBuilder()
+                    .errorHandler(new RestTemplateResponseErrorHandler())
+                    .uriTemplateHandler(fact)
+                    .build();
     }
 }
