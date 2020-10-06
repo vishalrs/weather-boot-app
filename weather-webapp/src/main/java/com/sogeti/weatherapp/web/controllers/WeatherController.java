@@ -35,21 +35,15 @@ public class WeatherController {
 
     @GetMapping(path = "/weather")
     public String showWeather(@SessionAttribute(value="authUser", required = false) User authUser , @RequestParam(value = "city", defaultValue = "amsterdam") String city, Model model, HttpSession session) {
-
         Location location = locationRepo.findByCity(city.toLowerCase());
-        String resourceUrl = "https://api.openweathermap.org/data/2.5/onecall?"
-                + "lat=" + location.getLat() + "&lon="+ location.getLng()
-                + "&units=metric&appid=" + apiKey;
-        WeatherInfo weatherInfo = restTemplate.getForObject(resourceUrl, WeatherInfo.class);
         if(authUser == null){
             return "redirect:/login";
         }
-
-        StandardWeatherInfo stdWeatherInfo = weatherInfoService.getWeatherInfo(city, weatherInfo);
+        StandardWeatherInfo stdWeatherInfo = weatherInfoService.getWeatherInfo(location);
         model.addAttribute("weather_info", stdWeatherInfo);
         model.addAttribute("authUser", authUser);
         if(authUser.getSubscription().equals("premium")){
-            ForecastWeatherInfo forecastWeatherInfo = weatherInfoService.getForecastInfo(city, weatherInfo);
+            ForecastWeatherInfo forecastWeatherInfo = weatherInfoService.getForecastInfo(location);
             System.out.println(forecastWeatherInfo);
             model.addAttribute("forecast_info", Optional.ofNullable(forecastWeatherInfo).map(o -> o.getForecastWeatherInfos()).orElse(null));
         }

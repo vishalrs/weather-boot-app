@@ -31,7 +31,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.sogeti</groupId>
-			<artifactId>weather-premium-api</artifactId>
+			<artifactId>weather-standard-api</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 

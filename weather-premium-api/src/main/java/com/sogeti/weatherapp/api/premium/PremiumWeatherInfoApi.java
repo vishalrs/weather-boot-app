@@ -1,18 +1,26 @@
 package com.sogeti.weatherapp.api.premium;
 
 import com.sogeti.weatherapp.common.api.IWeatherInfoApi;
-import com.sogeti.weatherapp.common.model.Daily;
-import com.sogeti.weatherapp.common.model.ForecastWeatherInfo;
-import com.sogeti.weatherapp.common.model.StandardWeatherInfo;
-import com.sogeti.weatherapp.common.model.WeatherInfo;
+import com.sogeti.weatherapp.common.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Map;
 
 import static com.sogeti.weatherapp.common.utils.DateTimeUtil.*;
 
 public class PremiumWeatherInfoApi implements IWeatherInfoApi {
+
+    @Autowired
+    RestTemplate restTemplate;
+
     @Override
-    public StandardWeatherInfo getWeatherInfo(String city, WeatherInfo weatherInfo) {
+    public StandardWeatherInfo getWeatherInfo(Location location) {
+        Map<String, String> params = Map.of("lat", location.getLat(), "lng", location.getLng());
+        WeatherInfo weatherInfo = restTemplate.getForObject("", WeatherInfo.class, params);
+
         StandardWeatherInfo stdWeatherInfo = new StandardWeatherInfo();
-        stdWeatherInfo.setCity(city);
+        stdWeatherInfo.setCity(location.getCity());
         stdWeatherInfo.setCurrentDateTime(convertUTCToDateTime(weatherInfo.getCurrent().getDt(), weatherInfo.getTimezone()));
         stdWeatherInfo.setDescription(weatherInfo.getCurrent().getWeather().get(0).getDescription());
         stdWeatherInfo.setCurrentTemp(weatherInfo.getDaily().get(0).getTemp().getDay());
@@ -27,12 +35,15 @@ public class PremiumWeatherInfoApi implements IWeatherInfoApi {
     }
 
     @Override
-    public ForecastWeatherInfo getForecastInfo(String city, WeatherInfo weatherInfo) {
+    public ForecastWeatherInfo getForecastInfo(Location location) {
+        Map<String, String> params = Map.of("lat", location.getLat(), "lng", location.getLng());
+        WeatherInfo weatherInfo = restTemplate.getForObject("", WeatherInfo.class, params);
+
         ForecastWeatherInfo forecastWeatherInfo = new ForecastWeatherInfo();
         weatherInfo.getDaily().remove(0);
         for (Daily daily: weatherInfo.getDaily()) {
             StandardWeatherInfo stdWeatherInfo = new StandardWeatherInfo();
-            stdWeatherInfo.setCity(city);
+            stdWeatherInfo.setCity(location.getCity());
             stdWeatherInfo.setCurrentDateTime(convertUTCToDay(daily.getDt(), weatherInfo.getTimezone()));
             stdWeatherInfo.setDescription(daily.getWeather().get(0).getDescription());
             stdWeatherInfo.setCurrentTemp(daily.getTemp().getDay());

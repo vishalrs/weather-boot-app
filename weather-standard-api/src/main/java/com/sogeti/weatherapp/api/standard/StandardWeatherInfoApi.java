@@ -1,21 +1,31 @@
 package com.sogeti.weatherapp.api.standard;
 import com.sogeti.weatherapp.common.api.IWeatherInfoApi;
 import com.sogeti.weatherapp.common.model.ForecastWeatherInfo;
+import com.sogeti.weatherapp.common.model.Location;
 import com.sogeti.weatherapp.common.model.StandardWeatherInfo;
 import com.sogeti.weatherapp.common.model.WeatherInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 import static com.sogeti.weatherapp.common.utils.DateTimeUtil.convertUTCToDateTime;
 import static com.sogeti.weatherapp.common.utils.DateTimeUtil.convertUTCToTime;
 
 public class StandardWeatherInfoApi implements IWeatherInfoApi {
 
+    @Autowired
+    RestTemplate restTemplate;
+
     @Override
-    public StandardWeatherInfo getWeatherInfo(String city, WeatherInfo weatherInfo) {
+    public StandardWeatherInfo getWeatherInfo(Location location) {
+        Map<String, String> params = Map.of("lat", location.getLat(), "lng", location.getLng());
+        WeatherInfo weatherInfo = restTemplate.getForObject("", WeatherInfo.class, params);
+
         StandardWeatherInfo stdWeatherInfo = new StandardWeatherInfo();
-        stdWeatherInfo.setCity(city);
+        stdWeatherInfo.setCity(location.getCity());
         stdWeatherInfo.setCurrentDateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm")));
         stdWeatherInfo.setCurrentDateTime(convertUTCToDateTime(weatherInfo.getCurrent().getDt(), weatherInfo.getTimezone()));
         stdWeatherInfo.setDescription(weatherInfo.getCurrent().getWeather().get(0).getDescription());
@@ -31,7 +41,7 @@ public class StandardWeatherInfoApi implements IWeatherInfoApi {
     }
 
     @Override
-    public ForecastWeatherInfo getForecastInfo(String city, WeatherInfo weatherInfo) {
+    public ForecastWeatherInfo getForecastInfo(Location location) {
         //No implementation as standard subscription do not allow this
         return null;
     }

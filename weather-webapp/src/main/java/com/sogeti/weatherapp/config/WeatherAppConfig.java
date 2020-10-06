@@ -13,8 +13,8 @@ public class WeatherAppConfig {
         return new StandardWeatherInfoApi();
     }*/
 
-    @Bean
+   /* @Bean
     public RestTemplate getRestTemplate(RestTemplateBuilder restBuilder){
         return restBuilder.build();
-    }
+    }*/
 }
