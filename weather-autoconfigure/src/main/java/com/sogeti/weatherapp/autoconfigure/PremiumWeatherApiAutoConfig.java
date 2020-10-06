@@ -34,6 +34,9 @@ public class PremiumWeatherApiAutoConfig {
                 .path("/data/2.5/onecall")
                 .query("appid=" + apiKey + "&units=metric&lat={lat}&lon={lng}");
         DefaultUriBuilderFactory fact = new DefaultUriBuilderFactory(uriComponents);
-        return new RestTemplateBuilder().uriTemplateHandler(fact).build();
+        return new RestTemplateBuilder()
+        .uriTemplateHandler(fact)
+        .errorHandler(new RestTemplateResponseErrorHandler())
+        .build();
     }
 }
