@@ -1,0 +1,28 @@
+
+weather-app:
+  app-id: 34a755b5784921587b8e366c277fa38
+  lang-feature:
+    is-enabled: true
+    units: metrics
+    lang: de
+
+spring:
+  profiles: acc
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+---
+
+spring:
+  profiles: prod
+weather-app:
+  app-id: 34a755b5784921587b8e366c277fa385
+  lang-feature:
+    is-enabled: false
+    units: metrics
+    lang: de

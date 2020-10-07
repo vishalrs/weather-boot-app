@@ -1,10 +1,12 @@
 package com.sogeti.weatherapp.web.controllers;
 
 import com.sogeti.weatherapp.common.api.IWeatherInfoApi;
-import com.sogeti.weatherapp.common.model.*;
+import com.sogeti.weatherapp.common.model.ForecastWeatherInfo;
+import com.sogeti.weatherapp.common.model.Location;
+import com.sogeti.weatherapp.common.model.StandardWeatherInfo;
+import com.sogeti.weatherapp.common.model.User;
 import com.sogeti.weatherapp.repositories.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,16 +14,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
-import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
-
 @Controller
 @RequestMapping("/web")
-@ConditionalOnProperty(prefix = "weather-app", name = "lang-feature.is-enabled", havingValue = "false")
-public class WeatherController {
+@ConditionalOnProperty(prefix = "weather-app", name = "lang-feature.is-enabled", havingValue = "true")
+public class WeatherLangController {
 
     @Autowired
     IWeatherInfoApi weatherInfoService;

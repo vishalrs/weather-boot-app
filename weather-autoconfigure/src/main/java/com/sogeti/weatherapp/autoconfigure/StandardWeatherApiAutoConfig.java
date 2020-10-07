@@ -1,6 +1,8 @@
 package com.sogeti.weatherapp.autoconfigure;
 
 import com.sogeti.weatherapp.api.standard.StandardWeatherInfoApi;
+import com.sogeti.weatherapp.autoconfigure.props.WeatherProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -16,8 +18,8 @@ import com.sogeti.weatherapp.autoconfigure.handler.RestTemplateResponseErrorHand
 @ConditionalOnClass(StandardWeatherInfoApi.class)
 public class StandardWeatherApiAutoConfig {
 
-    @Value("${api.key}")
-    String apiKey;
+    @Autowired
+    WeatherProperties props;
 
     @Bean
     @ConditionalOnMissingBean
@@ -32,7 +34,7 @@ public class StandardWeatherApiAutoConfig {
                 .scheme("https")
                 .host("api.openweathermap.org")
                 .path("/data/2.5/onecall")
-                .query("appid=" + apiKey + "&units=metric&lat={lat}&lon={lng}");
+                .query("appid=" + props.getAppId() + "&units=metric&lat={lat}&lon={lng}");
         DefaultUriBuilderFactory fact = new DefaultUriBuilderFactory(uriComponents);
         return new RestTemplateBuilder()
                     .errorHandler(new RestTemplateResponseErrorHandler())
