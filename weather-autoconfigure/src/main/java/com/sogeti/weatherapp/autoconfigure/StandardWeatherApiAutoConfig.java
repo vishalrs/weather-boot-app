@@ -23,8 +23,8 @@ public class StandardWeatherApiAutoConfig {
 
     @Bean
     @ConditionalOnMissingBean
-    public StandardWeatherInfoApi getStandardWeatherComponent(){
-        return new StandardWeatherInfoApi();
+    public StandardWeatherInfoApi getStandardWeatherComponent(RestTemplate restTemplate){
+        return new StandardWeatherInfoApi(restTemplate);
     }
 
     @Bean

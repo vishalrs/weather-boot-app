@@ -19,19 +19,18 @@ import com.sogeti.weatherapp.autoconfigure.handler.RestTemplateResponseErrorHand
 @Configuration
 @ConditionalOnClass(PremiumWeatherInfoApi.class)
 public class PremiumWeatherApiAutoConfig {
-    @Autowired
-    WeatherProperties props;
+
 
     @Bean
     @ConditionalOnMissingBean
-    public PremiumWeatherInfoApi getPremiumWeatherComponent(){
-        return new PremiumWeatherInfoApi();
+    public PremiumWeatherInfoApi getPremiumWeatherComponent(RestTemplate restTemplate){
+        return new PremiumWeatherInfoApi(restTemplate);
     }
 
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(prefix = "weather-app", name = "lang-feature.is-enabled", havingValue = "false")
-    public RestTemplate getDefaultRestTemplate(RestTemplateBuilder restBuilder){
+    public RestTemplate getDefaultRestTemplate(RestTemplateBuilder restBuilder, WeatherProperties props){
         UriComponentsBuilder uriComponents = UriComponentsBuilder.newInstance()
                 .scheme("https")
                 .host("api.openweathermap.org")
@@ -47,7 +46,7 @@ public class PremiumWeatherApiAutoConfig {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(prefix = "weather-app", name = "lang-feature.is-enabled", havingValue = "true")
-    public RestTemplate getRestTemplateWithLangFeature(RestTemplateBuilder restBuilder){
+    public RestTemplate getRestTemplateWithLangFeature(RestTemplateBuilder restBuilder, WeatherProperties props){
         UriComponentsBuilder uriComponents = UriComponentsBuilder.newInstance()
                 .scheme("https")
                 .host("api.openweathermap.org")

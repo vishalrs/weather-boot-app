@@ -5,6 +5,7 @@ import com.sogeti.weatherapp.common.model.Location;
 import com.sogeti.weatherapp.common.model.StandardWeatherInfo;
 import com.sogeti.weatherapp.common.model.WeatherInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
@@ -14,10 +15,14 @@ import java.util.Map;
 import static com.sogeti.weatherapp.common.utils.DateTimeUtil.convertUTCToDateTime;
 import static com.sogeti.weatherapp.common.utils.DateTimeUtil.convertUTCToTime;
 
+@Service
 public class StandardWeatherInfoApi implements IWeatherInfoApi {
 
-    @Autowired
     RestTemplate restTemplate;
+
+    public StandardWeatherInfoApi(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     @Override
     public StandardWeatherInfo getWeatherInfo(Location location) {

@@ -3,16 +3,21 @@ package com.sogeti.weatherapp.api.premium;
 import com.sogeti.weatherapp.common.api.IWeatherInfoApi;
 import com.sogeti.weatherapp.common.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
 import static com.sogeti.weatherapp.common.utils.DateTimeUtil.*;
 
+@Service
 public class PremiumWeatherInfoApi implements IWeatherInfoApi {
 
-    @Autowired
-    RestTemplate restTemplate;
+    private RestTemplate restTemplate;
+
+    public PremiumWeatherInfoApi(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     @Override
     public StandardWeatherInfo getWeatherInfo(Location location) {

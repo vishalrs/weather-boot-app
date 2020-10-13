@@ -44,7 +44,7 @@ public class WeatherController {
             System.out.println(forecastWeatherInfo);
             model.addAttribute("forecast_info", Optional.ofNullable(forecastWeatherInfo).map(o -> o.getForecastWeatherInfos()).orElse(null));
         }
-        return "/weather";
+        return "weather";
     }
 
 }
