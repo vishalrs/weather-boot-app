@@ -1,13 +1,20 @@
 package com.sogeti.weatherapp.common.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
 @Entity
 @Table(name = "locations")
+@NoArgsConstructor
 public class Location {
+
+    public Location(String lat, String lng) {
+        this.lat = lat;
+        this.lng = lng;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

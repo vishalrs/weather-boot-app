@@ -14,7 +14,7 @@ weather-app:
     is-enabled: true
     units: metrics
     lang: de
-
+debug: false
 
 ---
 
@@ -26,3 +26,6 @@ weather-app:
     is-enabled: false
     units: metrics
     lang: de
+  endpoint:
+    health:
+      show-details: always

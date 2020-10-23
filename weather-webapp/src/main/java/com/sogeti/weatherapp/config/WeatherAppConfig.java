@@ -8,13 +8,4 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class WeatherAppConfig {
 
-    /*@Bean
-    public IWeatherInfoApi getStandardWeatherInfoApi(){
-        return new StandardWeatherInfoApi();
-    }*/
-
-   /* @Bean
-    public RestTemplate getRestTemplate(RestTemplateBuilder restBuilder){
-        return restBuilder.build();
-    }*/
 }

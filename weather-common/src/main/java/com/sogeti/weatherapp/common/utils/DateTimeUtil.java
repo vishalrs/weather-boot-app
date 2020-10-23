@@ -13,8 +13,11 @@ public class DateTimeUtil {
     }
 
     public static String convertUTCToDateTime(Long time, String timezone){
-        Instant instant = Instant.ofEpochSecond(time);
-        return ZonedDateTime.ofInstant(instant, ZoneId.of( timezone )).format(DateTimeFormatter.ofPattern("dd-MM-yy HH:mm"));
+        if(time!=null) {
+            Instant instant = Instant.ofEpochSecond(time);
+            return ZonedDateTime.ofInstant(instant, ZoneId.of(timezone)).format(DateTimeFormatter.ofPattern("dd-MM-yy HH:mm"));
+        }
+        return "";
     }
 
     public static String convertUTCToDay(Long time, String timezone){

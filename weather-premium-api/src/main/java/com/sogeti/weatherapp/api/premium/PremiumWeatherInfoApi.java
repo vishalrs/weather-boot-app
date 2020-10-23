@@ -1,6 +1,7 @@
 package com.sogeti.weatherapp.api.premium;
 
 import com.sogeti.weatherapp.common.api.IWeatherInfoApi;
+import com.sogeti.weatherapp.common.exceptions.InvalidLocationException;
 import com.sogeti.weatherapp.common.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class PremiumWeatherInfoApi implements IWeatherInfoApi {
     @Override
     public StandardWeatherInfo getWeatherInfo(Location location) {
         Map<String, String> params = Map.of("lat", location.getLat(), "lng", location.getLng());
+        if(!isLocationValid(location)){
+            throw new InvalidLocationException("Location is invalid, cause" + location);
+        }
         WeatherInfo weatherInfo = restTemplate.getForObject("", WeatherInfo.class, params);
 
         StandardWeatherInfo stdWeatherInfo = new StandardWeatherInfo();
@@ -37,6 +41,15 @@ public class PremiumWeatherInfoApi implements IWeatherInfoApi {
         stdWeatherInfo.setSunset(convertUTCToTime(weatherInfo.getCurrent().getSunset(),weatherInfo.getTimezone()));
         stdWeatherInfo.setLastCalcTime(weatherInfo.getCurrent().getDt());
         return stdWeatherInfo;
+    }
+
+    private boolean isLocationValid(Location location) {
+        Double lat = Double.parseDouble(location.getLat());
+        Double lng = Double.parseDouble(location.getLng());
+        if(Math.abs(lat)<=90 && Math.abs(lng) <=180){
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -63,4 +76,6 @@ public class PremiumWeatherInfoApi implements IWeatherInfoApi {
         }
         return forecastWeatherInfo;
     }
+
+
 }
